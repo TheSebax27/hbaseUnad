@@ -1,0 +1,70 @@
+#!/bin/bash
+
+echo "create 'productos', 'info', 'detalles'" | hbase shell
+echo "create 'clientes', 'info', 'direccion'" | hbase shell
+echo "create 'ordenes', 'info', 'productos', 'estado'" | hbase shell
+
+echo "put 'productos', '1', 'info:nombre', 'Laptop Gaming'" | hbase shell
+echo "put 'productos', '1', 'info:precio', '1500'" | hbase shell
+echo "put 'productos', '1', 'info:categoria', 'Electrónica'" | hbase shell
+echo "put 'productos', '1', 'detalles:descripcion', 'Laptop potente para juegos de alta calidad'" | hbase shell
+echo "put 'productos', '1', 'detalles:stock', '50'" | hbase shell
+
+echo "put 'productos', '2', 'info:nombre', 'Smartphone 5G'" | hbase shell
+echo "put 'productos', '2', 'info:precio', '700'" | hbase shell
+echo "put 'productos', '2', 'info:categoria', 'Electrónica'" | hbase shell
+echo "put 'productos', '2', 'detalles:descripcion', 'Smartphone de última tecnología 5G'" | hbase shell
+echo "put 'productos', '2', 'detalles:stock', '150'" | hbase shell
+
+echo "put 'productos', '3', 'info:nombre', 'Auriculares Bluetooth'" | hbase shell
+echo "put 'productos', '3', 'info:precio', '100'" | hbase shell
+echo "put 'productos', '3', 'info:categoria', 'Accesorios'" | hbase shell
+echo "put 'productos', '3', 'detalles:descripcion', 'Auriculares Bluetooth con cancelación de ruido'" | hbase shell
+echo "put 'productos', '3', 'detalles:stock', '200'" | hbase shell
+
+echo "put 'clientes', 'C1', 'info:nombre', 'Juan Pérez'" | hbase shell
+echo "put 'clientes', 'C1', 'info:email', 'juan@example.com'" | hbase shell
+echo "put 'clientes', 'C1', 'direccion:direccion', 'Calle Ficticia 123, Ciudad A'" | hbase shell
+
+echo "put 'clientes', 'C2', 'info:nombre', 'María González'" | hbase shell
+echo "put 'clientes', 'C2', 'info:email', 'maria@example.com'" | hbase shell
+echo "put 'clientes', 'C2', 'direccion:direccion', 'Avenida Real 456, Ciudad B'" | hbase shell
+
+echo "put 'clientes', 'C3', 'info:nombre', 'Carlos Rodríguez'" | hbase shell
+echo "put 'clientes', 'C3', 'info:email', 'carlos@example.com'" | hbase shell
+echo "put 'clientes', 'C3', 'direccion:direccion', 'Plaza Central 789, Ciudad C'" | hbase shell
+
+echo "put 'ordenes', 'O1', 'info:cliente', 'C1'" | hbase shell
+echo "put 'ordenes', 'O1', 'info:fecha', '2024-11-24'" | hbase shell
+echo "put 'ordenes', 'O1', 'productos:producto1', '1'" | hbase shell
+echo "put 'ordenes', 'O1', 'productos:cantidad1', '1'" | hbase shell
+echo "put 'ordenes', 'O1', 'estado:estado', 'Procesando'" | hbase shell
+
+echo "put 'ordenes', 'O2', 'info:cliente', 'C2'" | hbase shell
+echo "put 'ordenes', 'O2', 'info:fecha', '2024-11-23'" | hbase shell
+echo "put 'ordenes', 'O2', 'productos:producto1', '2'" | hbase shell
+echo "put 'ordenes', 'O2', 'productos:cantidad1', '2'" | hbase shell
+echo "put 'ordenes', 'O2', 'estado:estado', 'Enviado'" | hbase shell
+
+echo "put 'ordenes', 'O3', 'info:cliente', 'C3'" | hbase shell
+echo "put 'ordenes', 'O3', 'info:fecha', '2024-11-22'" | hbase shell
+echo "put 'ordenes', 'O3', 'productos:producto1', '3'" | hbase shell
+echo "put 'ordenes', 'O3', 'productos:cantidad1', '3'" | hbase shell
+echo "put 'ordenes', 'O3', 'estado:estado', 'Entregado'" | hbase shell
+
+echo "scan 'ordenes', { FILTER => \"SingleColumnValueFilter('info', 'cliente', =, 'binary:C1')\" }" | hbase shell
+echo "scan 'productos', { FILTER => \"SingleColumnValueFilter('info', 'categoria', =, 'binary:Electrónica')\" }" | hbase shell
+echo "get 'ordenes', 'O1'" | hbase shell
+echo "scan 'clientes', { FILTER => \"SingleColumnValueFilter('info', 'email', =, 'binary:juan@example.com')\" }" | hbase shell
+
+echo "scan 'productos'" | hbase shell
+echo "scan 'clientes'" | hbase shell
+echo "scan 'ordenes'" | hbase shell
+
+echo "put 'ordenes', 'O1', 'estado:estado', 'Enviado'" | hbase shell
+echo "put 'productos', '1', 'info:precio', '1400'" | hbase shell
+echo "delete 'productos', '3'" | hbase shell
+echo "delete 'ordenes', 'O2'" | hbase shell
+
+echo "scan 'productos', { FILTER => \"SingleColumnValueFilter('detalles', 'stock', >=, 'binary:100')\" }" | hbase shell
+echo "scan 'ordenes', { FILTER => \"SingleColumnValueFilter('estado', 'estado', =, 'binary:Procesando')\" }" | hbase shell
